@@ -9,3 +9,5 @@ models/
 *.gguf
 results/*
 !results/.gitkeep
+benchmarks.csv
+benchmarks.json

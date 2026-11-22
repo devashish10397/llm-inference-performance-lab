@@ -11,7 +11,7 @@
     },
     "profile": {
       "kind": "concurrent",
-      "streams": [1, 2]
+      "streams": [1, 2, 4, 8, 16]
     },
     "data": [
       {
@@ -23,7 +23,7 @@
     "constraints": [
       {
         "kind": "max_duration",
-        "seconds": 30
+        "seconds": 120
       }
     ]
   },
