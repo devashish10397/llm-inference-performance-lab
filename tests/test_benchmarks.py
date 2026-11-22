@@ -7,6 +7,7 @@ from src.benchmarks.workload_generator import fixed_prompts
 from src.benchmarks.metrics import append_benchmark_csv
 from src.inference.minimal_decoder import GenerationMetrics
 from src.inference.kv_cache import estimate_kv_cache_bytes
+from src.serving.scheduler import FIFOScheduler, Request
 
 
 def test_percentile_interpolation() -> None:
@@ -62,3 +63,12 @@ def test_estimate_kv_cache_bytes() -> None:
         num_key_value_heads = 12
 
     assert estimate_kv_cache_bytes(Config(), 128) == 12 * 128 * 12 * 64 * 4
+
+
+def test_fifo_scheduler_batching() -> None:
+    scheduler = FIFOScheduler(batch_size=3)
+    scheduler.submit_many(
+        Request(str(index), "prompt", 8)
+        for index in range(7)
+    )
+    assert [len(batch) for batch in scheduler.drain()] == [3, 3, 1]

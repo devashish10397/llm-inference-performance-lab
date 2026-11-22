@@ -160,6 +160,12 @@ Compare KV-cache generation with full-sequence recomputation:
 python src/inference/kv_cache.py --device cuda --warmup 1 --runs 3 --max-new-tokens 32 --mode both
 ```
 
+Run a fixed-batch FIFO scheduling benchmark:
+
+```powershell
+python src/serving/scheduler.py --device cuda --warmup 1 --requests 8 --batch-size 4 --max-new-tokens 32
+```
+
 Development will initially use Windows and Python, with WSL2 and compatible GPU environments introduced for serving experiments.
 
 ## Learning and Engineering Focus
