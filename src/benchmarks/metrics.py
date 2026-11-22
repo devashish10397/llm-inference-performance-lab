@@ -44,6 +44,8 @@ CSV_COLUMNS = [
     "torch_version",
     "gpu_name",
     "max_new_tokens",
+    "kv_cache_enabled",
+    "estimated_kv_cache_bytes",
     "prompt",
     "prompt_tokens",
     "generated_tokens",
@@ -107,6 +109,12 @@ def append_benchmark_csv(
             else None
         ),
         "max_new_tokens": getattr(metrics, "max_new_tokens", None),
+        "kv_cache_enabled": getattr(metrics, "kv_cache_enabled", True),
+        "estimated_kv_cache_bytes": getattr(
+            metrics,
+            "estimated_kv_cache_bytes",
+            None,
+        ),
         "prompt": metrics.prompt,
         "prompt_tokens": metrics.prompt_tokens,
         "generated_tokens": metrics.generated_tokens,

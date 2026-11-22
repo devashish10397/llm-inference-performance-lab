@@ -154,6 +154,12 @@ and chart files are local artifacts and are ignored by Git. Generate charts with
 python src/analysis/plot_results.py
 ```
 
+Compare KV-cache generation with full-sequence recomputation:
+
+```powershell
+python src/inference/kv_cache.py --device cuda --warmup 1 --runs 3 --max-new-tokens 32 --mode both
+```
+
 Development will initially use Windows and Python, with WSL2 and compatible GPU environments introduced for serving experiments.
 
 ## Learning and Engineering Focus

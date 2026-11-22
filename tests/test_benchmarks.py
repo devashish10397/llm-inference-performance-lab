@@ -6,6 +6,7 @@ from src.benchmarks.metrics import percentile
 from src.benchmarks.workload_generator import fixed_prompts
 from src.benchmarks.metrics import append_benchmark_csv
 from src.inference.minimal_decoder import GenerationMetrics
+from src.inference.kv_cache import estimate_kv_cache_bytes
 
 
 def test_percentile_interpolation() -> None:
@@ -51,3 +52,13 @@ def test_append_benchmark_csv() -> None:
     assert len(rows) == 1
     assert rows[0]["repeat"] == "2"
     assert float(rows[0]["throughput_tokens_per_second"]) == 100
+
+
+def test_estimate_kv_cache_bytes() -> None:
+    class Config:
+        n_layer = 12
+        n_head = 12
+        n_embd = 768
+        num_key_value_heads = 12
+
+    assert estimate_kv_cache_bytes(Config(), 128) == 12 * 128 * 12 * 64 * 4
