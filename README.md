@@ -118,9 +118,24 @@ No performance improvements will be claimed without supporting measurements.
 
 ## Getting Started
 
-The repository is currently being initialized. Environment setup, dependencies, and execution instructions will be added alongside the first working implementation.
+Create a Python 3.12 virtual environment and install the dependencies:
 
-Development will initially use Windows and Python, with WSL2 and compatible GPU environments introduced for inference-serving experiments.
+```powershell
+py -3.12 -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip
+python -m pip install torch --index-url https://download.pytorch.org/whl/cu128
+python -m pip install -r requirements.txt
+python -m pytest tests -q
+```
+
+Run the minimal decoder baseline on NVIDIA CUDA:
+
+```powershell
+python src/inference/minimal_decoder.py --device cuda --max-new-tokens 32 --output results/baseline_smoke.json
+```
+
+Development will initially use Windows and Python, with WSL2 and compatible GPU environments introduced for serving experiments.
 
 ## Learning and Engineering Focus
 
