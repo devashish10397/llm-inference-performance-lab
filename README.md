@@ -172,6 +172,8 @@ Run a fixed-batch FIFO scheduling benchmark:
 python src/serving/scheduler.py --device cuda --warmup 1 --requests 8 --batch-size 4 --max-new-tokens 32
 ```
 
+See [vLLM serving results](docs/04_vllm_results.md) for the completed concurrency experiment.
+
 Development will initially use Windows and Python, with WSL2 and compatible GPU environments introduced for serving experiments.
 
 ## Learning and Engineering Focus
