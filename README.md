@@ -141,6 +141,12 @@ Run a repeated baseline with warm-up:
 python src/inference/minimal_decoder.py --device cuda --warmup 1 --runs 5 --repeat 1 --max-new-tokens 32
 ```
 
+Sweep prompt and output lengths:
+
+```powershell
+python src/inference/minimal_decoder.py --device cuda --warmup 1 --runs 3 --repeat 1 --prompt-token-counts "32,128,512" --output-token-counts "8,32,128"
+```
+
 Each run is also appended to `results/01_baseline/runs.csv` by default. Benchmark CSV
 and chart files are local artifacts and are ignored by Git. Generate charts with:
 

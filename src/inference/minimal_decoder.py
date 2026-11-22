@@ -171,6 +171,18 @@ def main() -> None:
     parser.add_argument("--experiment", default="01_baseline")
     parser.add_argument("--warmup", type=int, default=1)
     parser.add_argument("--runs", type=int, default=1)
+    parser.add_argument(
+        "--prompt-token-counts",
+        type=str,
+        default=None,
+        help="Comma-separated prompt token targets, for example: 4,128,512",
+    )
+    parser.add_argument(
+        "--output-token-counts",
+        type=str,
+        default=None,
+        help="Comma-separated output token targets, for example: 8,32,128",
+    )
     args = parser.parse_args()
     if args.warmup < 0:
         parser.error("--warmup must be 0 or greater")
@@ -179,66 +191,92 @@ def main() -> None:
     if args.max_new_tokens < 1:
         parser.error("--max-new-tokens must be at least 1")
 
+    prompt_counts = (
+        [int(value.strip()) for value in args.prompt_token_counts.split(",")]
+        if args.prompt_token_counts
+        else [None]
+    )
+    output_counts = (
+        [int(value.strip()) for value in args.output_token_counts.split(",")]
+        if args.output_token_counts
+        else [args.max_new_tokens]
+    )
+    if any(count < 1 for count in prompt_counts if count is not None):
+        parser.error("prompt token counts must be at least 1")
+    if any(count < 1 for count in output_counts):
+        parser.error("output token counts must be at least 1")
+
     decoder = MinimalDecoder(args.model, args.device)
-    for warmup_index in range(args.warmup):
-        decoder.generate(
-            args.prompt,
-            max_new_tokens=args.max_new_tokens,
-            temperature=args.temperature,
-        )
-        print(f"Warm-up {warmup_index + 1}/{args.warmup} complete")
+    for prompt_count in prompt_counts:
+        sweep_prompt = args.prompt
+        if prompt_count is not None:
+            while len(decoder.tokenizer(sweep_prompt)["input_ids"]) < prompt_count:
+                sweep_prompt += " large language model inference"
 
-    measured: list[GenerationMetrics] = []
-    for run_index in range(args.runs):
-        text, metrics = decoder.generate(
-            args.prompt,
-            max_new_tokens=args.max_new_tokens,
-            temperature=args.temperature,
-        )
-        repeat_number = args.repeat + run_index
-        measured.append(metrics)
-        print(text)
-        print(json.dumps(asdict(metrics), indent=2))
-        if args.output:
-            args.output.parent.mkdir(parents=True, exist_ok=True)
-            args.output.write_text(json.dumps(asdict(metrics), indent=2) + "\n")
-        if args.csv:
-            append_benchmark_csv(
-                args.csv,
-                metrics,
-                experiment=args.experiment,
-                repeat=repeat_number,
-            )
+        for output_count in output_counts:
+            for warmup_index in range(args.warmup):
+                decoder.generate(
+                    sweep_prompt,
+                    max_new_tokens=output_count,
+                    temperature=args.temperature,
+                )
+                print(f"Warm-up {warmup_index + 1}/{args.warmup} complete")
 
-    if len(measured) > 1:
-        ttft = [metric.ttft_ms for metric in measured]
-        tpot = [metric.tpot_ms for metric in measured]
-        e2e = [metric.end_to_end_ms for metric in measured]
-        print(
-            json.dumps(
-                {
-                    "summary": {
-                        "runs": len(measured),
-                        "ttft_ms": {
-                            "p50": percentile(ttft, 50),
-                            "p95": percentile(ttft, 95),
-                            "p99": percentile(ttft, 99),
+            measured: list[GenerationMetrics] = []
+            for run_index in range(args.runs):
+                text, metrics = decoder.generate(
+                    sweep_prompt,
+                    max_new_tokens=output_count,
+                    temperature=args.temperature,
+                )
+                repeat_number = args.repeat + run_index
+                measured.append(metrics)
+                print(text)
+                print(json.dumps(asdict(metrics), indent=2))
+                if args.output:
+                    args.output.parent.mkdir(parents=True, exist_ok=True)
+                    args.output.write_text(
+                        json.dumps(asdict(metrics), indent=2) + "\n"
+                    )
+                if args.csv:
+                    append_benchmark_csv(
+                        args.csv,
+                        metrics,
+                        experiment=args.experiment,
+                        repeat=repeat_number,
+                    )
+
+            if len(measured) > 1:
+                ttft = [metric.ttft_ms for metric in measured]
+                tpot = [metric.tpot_ms for metric in measured]
+                e2e = [metric.end_to_end_ms for metric in measured]
+                print(
+                    json.dumps(
+                        {
+                            "prompt_tokens_target": prompt_count,
+                            "output_tokens_target": output_count,
+                            "summary": {
+                                "runs": len(measured),
+                                "ttft_ms": {
+                                    "p50": percentile(ttft, 50),
+                                    "p95": percentile(ttft, 95),
+                                    "p99": percentile(ttft, 99),
+                                },
+                                "tpot_ms": {
+                                    "p50": percentile(tpot, 50),
+                                    "p95": percentile(tpot, 95),
+                                    "p99": percentile(tpot, 99),
+                                },
+                                "end_to_end_ms": {
+                                    "p50": percentile(e2e, 50),
+                                    "p95": percentile(e2e, 95),
+                                    "p99": percentile(e2e, 99),
+                                },
+                            },
                         },
-                        "tpot_ms": {
-                            "p50": percentile(tpot, 50),
-                            "p95": percentile(tpot, 95),
-                            "p99": percentile(tpot, 99),
-                        },
-                        "end_to_end_ms": {
-                            "p50": percentile(e2e, 50),
-                            "p95": percentile(e2e, 95),
-                            "p99": percentile(e2e, 99),
-                        },
-                    }
-                },
-                indent=2,
-            )
-        )
+                        indent=2,
+                    )
+                )
 
 
 if __name__ == "__main__":
