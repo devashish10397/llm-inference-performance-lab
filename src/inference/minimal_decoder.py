@@ -4,12 +4,19 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 import time
 from dataclasses import asdict, dataclass
 from pathlib import Path
 
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
+
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+from src.benchmarks.metrics import append_benchmark_csv, percentile
 
 
 @dataclass
@@ -24,6 +31,9 @@ class GenerationMetrics:
     end_to_end_ms: float
     tpot_ms: float
     peak_gpu_memory_mb: float | None
+    max_new_tokens: int = 32
+    gpu_name: str | None = None
+    torch_version: str = torch.__version__
 
 
 class MinimalDecoder:
@@ -127,6 +137,12 @@ class MinimalDecoder:
             end_to_end_ms=end_to_end_ms,
             tpot_ms=tpot_ms,
             peak_gpu_memory_mb=peak_gpu_memory_mb,
+            max_new_tokens=max_new_tokens,
+            gpu_name=(
+                torch.cuda.get_device_name(0)
+                if self.device == "cuda"
+                else None
+            ),
         )
         return text, metrics
 
@@ -145,20 +161,84 @@ def main() -> None:
     parser.add_argument("--temperature", type=float, default=0.0)
     parser.add_argument("--device", choices=("cpu", "cuda"), default=None)
     parser.add_argument("--output", type=Path)
+    parser.add_argument(
+        "--csv",
+        type=Path,
+        default=Path("results/01_baseline/runs.csv"),
+        help="Append one run to this CSV",
+    )
+    parser.add_argument("--repeat", type=int, default=1)
+    parser.add_argument("--experiment", default="01_baseline")
+    parser.add_argument("--warmup", type=int, default=1)
+    parser.add_argument("--runs", type=int, default=1)
     args = parser.parse_args()
+    if args.warmup < 0:
+        parser.error("--warmup must be 0 or greater")
+    if args.runs < 1:
+        parser.error("--runs must be at least 1")
+    if args.max_new_tokens < 1:
+        parser.error("--max-new-tokens must be at least 1")
 
     decoder = MinimalDecoder(args.model, args.device)
-    text, metrics = decoder.generate(
-        args.prompt,
-        max_new_tokens=args.max_new_tokens,
-        temperature=args.temperature,
-    )
+    for warmup_index in range(args.warmup):
+        decoder.generate(
+            args.prompt,
+            max_new_tokens=args.max_new_tokens,
+            temperature=args.temperature,
+        )
+        print(f"Warm-up {warmup_index + 1}/{args.warmup} complete")
 
-    print(text)
-    print(json.dumps(asdict(metrics), indent=2))
-    if args.output:
-        args.output.parent.mkdir(parents=True, exist_ok=True)
-        args.output.write_text(json.dumps(asdict(metrics), indent=2) + "\n")
+    measured: list[GenerationMetrics] = []
+    for run_index in range(args.runs):
+        text, metrics = decoder.generate(
+            args.prompt,
+            max_new_tokens=args.max_new_tokens,
+            temperature=args.temperature,
+        )
+        repeat_number = args.repeat + run_index
+        measured.append(metrics)
+        print(text)
+        print(json.dumps(asdict(metrics), indent=2))
+        if args.output:
+            args.output.parent.mkdir(parents=True, exist_ok=True)
+            args.output.write_text(json.dumps(asdict(metrics), indent=2) + "\n")
+        if args.csv:
+            append_benchmark_csv(
+                args.csv,
+                metrics,
+                experiment=args.experiment,
+                repeat=repeat_number,
+            )
+
+    if len(measured) > 1:
+        ttft = [metric.ttft_ms for metric in measured]
+        tpot = [metric.tpot_ms for metric in measured]
+        e2e = [metric.end_to_end_ms for metric in measured]
+        print(
+            json.dumps(
+                {
+                    "summary": {
+                        "runs": len(measured),
+                        "ttft_ms": {
+                            "p50": percentile(ttft, 50),
+                            "p95": percentile(ttft, 95),
+                            "p99": percentile(ttft, 99),
+                        },
+                        "tpot_ms": {
+                            "p50": percentile(tpot, 50),
+                            "p95": percentile(tpot, 95),
+                            "p99": percentile(tpot, 99),
+                        },
+                        "end_to_end_ms": {
+                            "p50": percentile(e2e, 50),
+                            "p95": percentile(e2e, 95),
+                            "p99": percentile(e2e, 99),
+                        },
+                    }
+                },
+                indent=2,
+            )
+        )
 
 
 if __name__ == "__main__":

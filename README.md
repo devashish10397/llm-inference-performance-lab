@@ -135,6 +135,19 @@ Run the minimal decoder baseline on NVIDIA CUDA:
 python src/inference/minimal_decoder.py --device cuda --max-new-tokens 32 --output results/baseline_smoke.json
 ```
 
+Run a repeated baseline with warm-up:
+
+```powershell
+python src/inference/minimal_decoder.py --device cuda --warmup 1 --runs 5 --repeat 1 --max-new-tokens 32
+```
+
+Each run is also appended to `results/01_baseline/runs.csv` by default. Benchmark CSV
+and chart files are local artifacts and are ignored by Git. Generate charts with:
+
+```powershell
+python src/analysis/plot_results.py
+```
+
 Development will initially use Windows and Python, with WSL2 and compatible GPU environments introduced for serving experiments.
 
 ## Learning and Engineering Focus
