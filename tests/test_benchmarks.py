@@ -8,7 +8,7 @@ from src.benchmarks.metrics import append_benchmark_csv
 from src.inference.minimal_decoder import GenerationMetrics
 from src.inference.kv_cache import estimate_kv_cache_bytes
 from src.serving.scheduler import FIFOScheduler, Request
-from src.analysis.plot_results import plot_kv_cache, plot_batching
+from src.analysis.plot_results import plot_kv_cache, plot_batching, plot_vllm
 
 
 def test_percentile_interpolation() -> None:
@@ -97,3 +97,37 @@ def test_kv_cache_and_batch_chart_helpers(tmp_path: Path) -> None:
     )
     batch_charts = plot_batching(batch_csv, tmp_path / "batch_charts")
     assert all(chart.exists() for chart in batch_charts)
+
+
+def test_vllm_chart_helper(tmp_path: Path) -> None:
+    import json
+
+    benchmark_json = tmp_path / "benchmarks.json"
+    benchmark_json.write_text(
+        json.dumps(
+            {
+                "benchmarks": [
+                    {
+                        "config": {"strategy": {"streams": 1}},
+                        "metrics": {
+                            "time_to_first_token_ms": {
+                                "successful": {"median": 11.1}
+                            },
+                            "time_per_output_token_ms": {
+                                "successful": {"median": 3.9}
+                            },
+                            "output_tokens_per_second": {
+                                "successful": {"mean": 37.3}
+                            },
+                            "requests_per_second": {
+                                "successful": {"mean": 1.1}
+                            },
+                        },
+                    }
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+    charts = plot_vllm(benchmark_json, tmp_path / "charts")
+    assert all(chart.exists() for chart in charts)

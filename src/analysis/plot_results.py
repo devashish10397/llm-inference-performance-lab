@@ -5,6 +5,8 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
+import matplotlib
+matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import pandas as pd
 
@@ -132,6 +134,74 @@ def plot_batching(csv_path: Path, output_dir: Path) -> list[Path]:
     return generated
 
 
+def plot_vllm(json_path: Path, output_dir: Path) -> list[Path]:
+    import json
+
+    data = json.loads(json_path.read_text(encoding="utf-8"))
+    rows = []
+    for benchmark in data["benchmarks"]:
+        metrics = benchmark["metrics"]
+        streams = benchmark["config"]["strategy"]["streams"]
+        rows.append(
+            {
+                "concurrency": streams,
+                "ttft_ms": metrics["time_to_first_token_ms"]["successful"]["median"],
+                "tpot_ms": metrics["time_per_output_token_ms"]["successful"]["median"],
+                "output_tokens_per_second": metrics["output_tokens_per_second"]["successful"]["mean"],
+                "requests_per_second": metrics["requests_per_second"]["successful"]["mean"],
+            }
+        )
+    frame = pd.DataFrame(rows).sort_values("concurrency")
+
+    output_dir.mkdir(parents=True, exist_ok=True)
+    generated: list[Path] = []
+
+    fig, axis = plt.subplots(figsize=(8, 5))
+    axis.plot(
+        frame["concurrency"],
+        frame["ttft_ms"],
+        marker="o",
+        linewidth=2,
+    )
+    axis.set_title("vLLM: Median TTFT vs. Concurrency")
+    axis.set_xlabel("Concurrent requests")
+    axis.set_ylabel("TTFT (ms)")
+    axis.grid(alpha=0.25)
+    fig.tight_layout()
+    ttft_path = output_dir / "vllm_ttft.png"
+    fig.savefig(ttft_path, dpi=160)
+    plt.close(fig)
+    generated.append(ttft_path)
+
+    fig, axis = plt.subplots(figsize=(8, 5))
+    axis.plot(
+        frame["concurrency"],
+        frame["output_tokens_per_second"],
+        marker="o",
+        linewidth=2,
+        label="Output tokens/s",
+    )
+    axis.plot(
+        frame["concurrency"],
+        frame["requests_per_second"],
+        marker="o",
+        linewidth=2,
+        label="Requests/s",
+    )
+    axis.set_title("vLLM: Throughput vs. Concurrency")
+    axis.set_xlabel("Concurrent requests")
+    axis.set_ylabel("Throughput")
+    axis.grid(alpha=0.25)
+    axis.legend()
+    fig.tight_layout()
+    throughput_path = output_dir / "vllm_throughput.png"
+    fig.savefig(throughput_path, dpi=160)
+    plt.close(fig)
+    generated.append(throughput_path)
+
+    return generated
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Create charts from benchmark runs")
     parser.add_argument(
@@ -155,6 +225,11 @@ def main() -> None:
         type=Path,
         default=Path("results/03_batching/runs.csv"),
     )
+    parser.add_argument(
+        "--vllm",
+        type=Path,
+        default=Path("results/04_vllm/benchmarks.json"),
+    )
     parser.add_argument("--all-experiments", action="store_true")
     args = parser.parse_args()
     for chart in plot_benchmark(args.csv, args.output):
@@ -170,6 +245,12 @@ def main() -> None:
             for chart in plot_batching(
                 args.batching,
                 args.batching.parent / "charts",
+            ):
+                print(chart)
+        if args.vllm.exists():
+            for chart in plot_vllm(
+                args.vllm,
+                args.vllm.parent / "charts",
             ):
                 print(chart)
 
