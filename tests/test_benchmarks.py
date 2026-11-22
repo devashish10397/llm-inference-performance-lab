@@ -8,6 +8,7 @@ from src.benchmarks.metrics import append_benchmark_csv
 from src.inference.minimal_decoder import GenerationMetrics
 from src.inference.kv_cache import estimate_kv_cache_bytes
 from src.serving.scheduler import FIFOScheduler, Request
+from src.analysis.plot_results import plot_kv_cache, plot_batching
 
 
 def test_percentile_interpolation() -> None:
@@ -72,3 +73,27 @@ def test_fifo_scheduler_batching() -> None:
         for index in range(7)
     )
     assert [len(batch) for batch in scheduler.drain()] == [3, 3, 1]
+
+
+def test_kv_cache_and_batch_chart_helpers(tmp_path: Path) -> None:
+    kv_csv = tmp_path / "kv.csv"
+    kv_csv.write_text(
+        "kv_cache_enabled,tpot_ms,ttft_ms,end_to_end_ms,"
+        "peak_gpu_memory_mb\n"
+        "True,6,7,50,253\n"
+        "False,6,6,49,254\n",
+        encoding="utf-8",
+    )
+    kv_charts = plot_kv_cache(kv_csv, tmp_path / "kv_charts")
+    assert all(chart.exists() for chart in kv_charts)
+
+    batch_csv = tmp_path / "batch.csv"
+    batch_csv.write_text(
+        "batch_size,batch_latency_ms,queue_wait_ms\n"
+        "1,50,1\n"
+        "2,60,2\n"
+        "4,70,3\n",
+        encoding="utf-8",
+    )
+    batch_charts = plot_batching(batch_csv, tmp_path / "batch_charts")
+    assert all(chart.exists() for chart in batch_charts)

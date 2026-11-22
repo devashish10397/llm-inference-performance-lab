@@ -154,6 +154,12 @@ and chart files are local artifacts and are ignored by Git. Generate charts with
 python src/analysis/plot_results.py
 ```
 
+Generate charts for baseline, KV-cache, and batching results:
+
+```powershell
+python src/analysis/plot_results.py --all-experiments
+```
+
 Compare KV-cache generation with full-sequence recomputation:
 
 ```powershell
