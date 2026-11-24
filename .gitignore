@@ -13,3 +13,4 @@ results/*
 !results/machines/**
 benchmarks.csv
 benchmarks.json
+!results/combined-final-report.md
