@@ -53,3 +53,18 @@ TPOT reduction.
 The vLLM results show throughput scaling from 652.18 output tokens/s at
 concurrency 1 to 5539.43 at concurrency 16. Median TTFT rose from 11.2984 ms
 to 39.7477 ms over the same range.
+
+## Temperature and power
+
+KV-cache telemetry captured one-second GPU readings on both machines.
+
+| Machine | Temperature range | Power range |
+|---|---:|---:|
+| RTX 3050 Ti Laptop | 83-91 C | 16.48-22.79 W |
+| RTX 5060 Ti Desktop | 37.18-44.18 C | 6.01-50.78 W |
+
+The laptop ran at substantially higher temperatures during the KV-cache
+sweep. The desktop had a wider measured power range and much lower peak
+temperature, although the laptops and desktops used different thermal and
+power-state conditions. These ranges are observational, not equal-duration
+thermal stress tests.

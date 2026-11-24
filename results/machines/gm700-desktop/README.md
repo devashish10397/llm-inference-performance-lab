@@ -90,6 +90,17 @@ per concurrency level. All five levels recorded zero errored requests.
 | 8 | 24.2724 ms | 26.5276 ms | 2.1617 ms | 3768.2667 | 117.758 |
 | 16 | 39.7477 ms | 43.4449 ms | 2.9429 ms | 5539.4333 | 173.067 |
 
+## Temperature and Power
+
+| Machine | Temperature range | Power range |
+|---|---:|---:|
+| RTX 3050 Ti Laptop | 83-91 C | 16.48-22.79 W |
+| RTX 5060 Ti Desktop | 37.18-44.18 C | 6.01-50.78 W |
+
+The laptop reached much higher temperatures during the KV-cache sweep. The
+desktop measured a wider power range, but the full-power and thermal limits
+were different, so these readings should be treated as observational.
+
 ## Contents
 
 - `baseline/`: direct PyTorch raw and summary measurements and charts.

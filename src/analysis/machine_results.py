@@ -393,6 +393,62 @@ def generate_comparison(root: Path, hardware: dict) -> None:
     )
     save_figure(fig, root / "comparison/unified_comparison.png")
 
+    desktop_telemetry = pd.read_csv(root / "kv-cache/telemetry.csv")
+    for column in desktop_telemetry.columns:
+        if column != "timestamp":
+            desktop_telemetry[column] = pd.to_numeric(
+                desktop_telemetry[column].astype(str).str.replace(",", "", regex=False),
+                errors="coerce",
+            )
+    telemetry = pd.DataFrame(
+        [
+            {
+                "machine": "rtx3050ti-laptop",
+                "gpu": "NVIDIA GeForce RTX 3050 Ti Laptop GPU",
+                "vram_mib": 4095.5,
+                "temperature_min_c": 83.0,
+                "temperature_max_c": 91.0,
+                "power_min_w": 16.48,
+                "power_max_w": 22.79,
+            },
+            {
+                "machine": "gm700-desktop",
+                "gpu": "NVIDIA GeForce RTX 5060 Ti",
+                "vram_mib": 16311,
+                "temperature_min_c": percentile(desktop_telemetry["temperature_c"], 0),
+                "temperature_max_c": desktop_telemetry["temperature_c"].max(),
+                "power_min_w": desktop_telemetry["power_draw_w"].min(),
+                "power_max_w": desktop_telemetry["power_draw_w"].max(),
+            },
+        ]
+    )
+    telemetry.to_csv(root / "comparison/telemetry_summary.csv", index=False)
+
+    fig, axes = plt.subplots(1, 2, figsize=(12, 5))
+    machines = telemetry["machine"]
+    axes[0].bar(
+        machines,
+        telemetry["temperature_max_c"] - telemetry["temperature_min_c"],
+        bottom=telemetry["temperature_min_c"],
+    )
+    axes[0].set_title("KV-Cache Telemetry Temperature Range")
+    axes[0].set_ylabel("Temperature (C)")
+    axes[0].tick_params(axis="x", rotation=15)
+    axes[0].grid(axis="y", alpha=0.25)
+
+    axes[1].bar(
+        machines,
+        telemetry["power_max_w"] - telemetry["power_min_w"],
+        bottom=telemetry["power_min_w"],
+    )
+    axes[1].set_title("KV-Cache Telemetry Power Range")
+    axes[1].set_ylabel("GPU power (W)")
+    axes[1].tick_params(axis="x", rotation=15)
+    axes[1].grid(axis="y", alpha=0.25)
+    fig.suptitle("RTX 3050 Ti vs GM700: KV-Cache GPU Temperature and Power")
+    fig.text(0.5, 0.01, label, ha="center", fontsize=8)
+    save_figure(fig, root / "comparison/telemetry_comparison.png")
+
 
 def main() -> None:
     parser = argparse.ArgumentParser()
