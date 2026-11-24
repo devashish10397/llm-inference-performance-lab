@@ -1,0 +1,2 @@
+machine,model,device,prompt_tokens,output_tokens,ttft_p50_ms,ttft_p95_ms,ttft_p99_ms,tpot_p50_ms,tpot_p95_ms,tpot_p99_ms,end_to_end_p50_ms,output_tps_p50,peak_gpu_memory_mib
+gm700-desktop,openai-community/gpt2,cuda,4,32,6.781499992939644,6.878519985184539,6.8871439844951965,5.845354838510825,5.849872259310477,5.850273807826001,190.8867000020109,167.63870924303734,254.046875

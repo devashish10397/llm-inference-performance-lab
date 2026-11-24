@@ -1,0 +1,50 @@
+{
+  "machine": "gm700-desktop",
+  "os": "Microsoft Windows 11 Home",
+  "os_version": "10.0.26300",
+  "os_architecture": "64-bit",
+  "cpu": "AMD Ryzen 7 8700F 8-Core Processor",
+  "cpu_cores": 8,
+  "cpu_threads": 16,
+  "ram_gib": 31.67,
+  "disk": {
+    "device": "C:",
+    "filesystem": "NTFS",
+    "size_gib": 928.7,
+    "free_gib": 675.1
+  },
+  "gpu": "NVIDIA GeForce RTX 5060 Ti",
+  "gpu_vram_mib": 16311,
+  "gpu_vram_gib": 15.93,
+  "compute_capability": "12.0",
+  "nvidia_driver": "621.01",
+  "software": {
+    "python": "3.12.10",
+    "torch": "2.11.0+cu128",
+    "cuda": "12.8",
+    "transformers": "5.24.0",
+    "accelerate": "1.16.0",
+    "numpy": "2.5.5",
+    "pandas": "3.1.1",
+    "matplotlib": "3.11.2",
+    "pytest": "9.2.0",
+    "vllm": "0.34.0",
+    "torch_in_vllm": "2.14.0+cu130",
+    "guidellm": "0.8.1",
+    "model": "openai-community/gpt2",
+    "precision": "FP16",
+    "baseline_prompt_output": "4/32",
+    "baseline_warmup_repeats": "1 warm-up, 3 measured",
+    "kv_prompt_output": "4/32, 64, 128",
+    "kv_warmup_repeats": "1 warm-up, 5 measured per mode",
+    "batching_prompt_output": "4/32",
+    "batching_requests": "8 requests; batches 1/2/4/8",
+    "vllm_prompt_output": "128/32",
+    "vllm_duration": "120 seconds per concurrency 1/2/4/8/16"
+  },
+  "wsl": {
+    "default_distribution": "Ubuntu-24.04",
+    "default_version": 2,
+    "ubuntu_24_04": "Running"
+  }
+}
