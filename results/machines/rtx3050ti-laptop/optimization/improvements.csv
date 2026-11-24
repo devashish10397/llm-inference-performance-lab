@@ -1,0 +1,22 @@
+experiment,control,candidate,metric,control_value,candidate_value,improvement_pct,interpretation,improvement_display
+fixed_batching,batch_1,batch_1,output_tokens_per_second,37.93662236731037,37.93662236731037,0.0000000000,higher is better,+0.00%
+fixed_batching,batch_1,batch_2,output_tokens_per_second,37.93662236731037,68.1265965673046,79.5800266763,higher is better,+79.58%
+fixed_batching,batch_1,batch_4,output_tokens_per_second,37.93662236731037,122.22847529125117,222.1912433527,higher is better,+222.19%
+fixed_batching,batch_1,batch_8,output_tokens_per_second,37.93662236731037,240.57480086028295,534.1492358782,higher is better,+534.15%
+kv_cache,cache_off_32,cache_on_32,ttft_ms_p50,27.399799997510854,28.33690000261413,-3.4200979759,lower is better,-3.42%
+kv_cache,cache_off_32,cache_on_32,tpot_ms_p50,29.0637741939375,25.049406450923396,13.8122726809,lower is better,+13.81%
+kv_cache,cache_off_32,cache_on_32,end_to_end_ms_p50,971.0915999967256,818.1736999977147,15.7470108896,lower is better,+15.75%
+kv_cache,cache_off_32,cache_on_32,throughput_tokens_per_second_p50,32.95260714860257,39.11149918420671,18.6901510033,higher is better,+18.69%
+kv_cache,cache_off_64,cache_on_64,ttft_ms_p50,26.964100004988723,27.98070000426378,-3.7701981490,lower is better,-3.77%
+kv_cache,cache_off_64,cache_on_64,tpot_ms_p50,33.09513492087486,24.922209523783604,24.6952472520,lower is better,+24.70%
+kv_cache,cache_off_64,cache_on_64,end_to_end_ms_p50,2198.708299998543,1645.278199997847,25.1706922651,lower is better,+25.17%
+kv_cache,cache_off_64,cache_on_64,throughput_tokens_per_second_p50,29.10799945588162,38.89919650067919,33.6374784521,higher is better,+33.64%
+kv_cache,cache_off_128,cache_on_128,ttft_ms_p50,28.193300000566524,28.75099999801023,-1.9781295465,lower is better,-1.98%
+kv_cache,cache_off_128,cache_on_128,tpot_ms_p50,44.26923307086484,25.517715747831627,42.3578996569,lower is better,+42.36%
+kv_cache,cache_off_128,cache_on_128,end_to_end_ms_p50,5812.612100002298,3361.7710000035004,42.1641949924,lower is better,+42.16%
+kv_cache,cache_off_128,cache_on_128,throughput_tokens_per_second_p50,22.021080677299867,38.07516930804231,72.9032733043,higher is better,+72.90%
+vllm_serving,concurrency_1,concurrency_1,output_tokens_per_second,48.266666666666666,48.266666666666666,0.0000000000,higher is better,+0.00%
+vllm_serving,concurrency_1,concurrency_2,output_tokens_per_second,48.266666666666666,70.4,45.8563535912,higher is better,+45.86%
+vllm_serving,concurrency_1,concurrency_4,output_tokens_per_second,48.266666666666666,104.53333333333333,116.5745856354,higher is better,+116.57%
+vllm_serving,concurrency_1,concurrency_8,output_tokens_per_second,48.266666666666666,137.0583333333333,183.9606353591,higher is better,+183.96%
+sustained_thermal,short_baseline,5_minute_sustain,end_to_end_ms_p50,804.0933000011137,1167.6497000007657,-45.2132109544,negative is degradation; sustained hot-state test,-45.21%

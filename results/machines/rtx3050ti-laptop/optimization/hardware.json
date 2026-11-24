@@ -1,0 +1,21 @@
+{
+  "machine_id": "rtx3050ti-laptop",
+  "os": "Microsoft Windows 11 Home 10.0.26300 64-bit",
+  "wsl": "Ubuntu 24.04.5 WSL2",
+  "cpu": "AMD Ryzen 9 5900HS with Radeon Graphics",
+  "cpu_cores_threads": "8C/16T",
+  "ram_gib": 15.41,
+  "gpu": "NVIDIA GeForce RTX 3050 Ti Laptop GPU",
+  "gpu_vram_mib": 4095.5,
+  "compute_capability": "8.6",
+  "nvidia_driver": "560.94",
+  "cuda_driver_capability": "12.6",
+  "python_windows": "3.12.2",
+  "torch_windows": "2.14.1+cu126",
+  "vllm": "0.8.5.post1",
+  "guidellm": "0.8.1",
+  "vllm_torch": "2.6.0+cu124",
+  "vllm_cuda_runtime": "12.4",
+  "precision": "float16",
+  "model": "openai-community/gpt2"
+}

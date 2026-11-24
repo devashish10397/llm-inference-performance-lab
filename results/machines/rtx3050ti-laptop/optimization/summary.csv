@@ -1,0 +1,17 @@
+experiment,dimension,setting,value,unit
+baseline,single,1,39.796376863177045,output_tokens_per_second
+batching,batch_size,1,37.93662236731037,output_tokens_per_second
+batching,batch_size,2,68.1265965673046,output_tokens_per_second
+batching,batch_size,4,122.22847529125117,output_tokens_per_second
+batching,batch_size,8,240.57480086028295,output_tokens_per_second
+kv_cache,output_tokens/cache,32/on,39.11149918420671,output_tokens_per_second
+kv_cache,output_tokens/cache,32/off,32.95260714860257,output_tokens_per_second
+kv_cache,output_tokens/cache,64/on,38.89919650067919,output_tokens_per_second
+kv_cache,output_tokens/cache,64/off,29.10799945588162,output_tokens_per_second
+kv_cache,output_tokens/cache,128/on,38.07516930804231,output_tokens_per_second
+kv_cache,output_tokens/cache,128/off,22.021080677299867,output_tokens_per_second
+vllm,concurrency,1,48.266666666666666,output_tokens_per_second
+vllm,concurrency,2,70.4,output_tokens_per_second
+vllm,concurrency,4,104.53333333333333,output_tokens_per_second
+vllm,concurrency,8,137.0583333333333,output_tokens_per_second
+thermal,duration,300s,261,completed_requests

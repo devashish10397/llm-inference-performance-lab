@@ -1,0 +1,33 @@
+{
+  "duration_seconds": 300.3218100000013,
+  "requests": 261,
+  "latency": {
+    "p50_ms": 1167.6497000007657,
+    "p95_ms": 1593.8879000023007,
+    "p99_ms": 2169.0917399988375,
+    "mean_ms": 1146.9225222221442,
+    "cv_pct": 26.79532172815076
+  },
+  "telemetry_samples": 363,
+  "temperature_c": {
+    "min": 91.0,
+    "median": 97.0,
+    "max": 97.0
+  },
+  "power_draw_w": {
+    "min": 19.16,
+    "median": 23.48,
+    "max": 24.1
+  },
+  "graphics_clock_mhz": {
+    "min": 210.0,
+    "median": 210.0,
+    "max": 210.0,
+    "first_30s_mean": 210.0,
+    "last_30s_mean": 210.0
+  },
+  "peak_vram_used_mib": 907.0,
+  "thermal_constraint_indicated": true,
+  "thermal_constraint_note": "Sustained 91-97 C with the graphics clock at 210 MHz throughout indicates a thermal/power-constrained state; no cold-start transition was captured.",
+  "thermal_throttling_transition_detected": false
+}
