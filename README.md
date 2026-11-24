@@ -174,6 +174,11 @@ python src/serving/scheduler.py --device cuda --warmup 1 --requests 8 --batch-si
 
 See [vLLM serving results](docs/04_vllm_results.md) for the completed concurrency experiment.
 
+## Machine Benchmark Results
+
+- [GM700 desktop](results/machines/gm700-desktop/README.md)
+- [RTX 3050 Ti laptop](results/machines/rtx3050ti-laptop/README.md)
+
 Development will initially use Windows and Python, with WSL2 and compatible GPU environments introduced for serving experiments.
 
 ## Learning and Engineering Focus
