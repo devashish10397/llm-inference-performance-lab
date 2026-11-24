@@ -64,13 +64,13 @@ Measurements will include workload configuration, hardware details, and methodol
 
 | Phase | Focus | Status |
 |---|---|---|
-| 01 | Minimal autoregressive decoder and baseline measurements | Planned |
-| 02 | KV-cache behavior and memory analysis | Planned |
-| 03 | Request scheduling and batching experiments | Planned |
-| 04 | vLLM serving, concurrency, and throughput analysis | Planned |
-| 05 | MLC LLM runtime and quantization experiments | Planned |
-| 06 | GPU profiling and bottleneck identification | Planned |
-| 07 | Optimization experiments and performance comparisons | Planned |
+| 01 | Minimal autoregressive decoder and baseline measurements | Complete |
+| 02 | KV-cache behavior and memory analysis | Complete |
+| 03 | Request scheduling and batching experiments | Complete |
+| 04 | vLLM serving, concurrency, and throughput analysis | Complete |
+| 05 | MLC LLM runtime and quantization experiments | Blocked / not started |
+| 06 | GPU profiling and bottleneck identification | Partial |
+| 07 | Optimization experiments and performance comparisons | Complete for GPT-2 batching, KV cache, vLLM and thermal behavior |
 
 ## Repository Structure
 
@@ -171,6 +171,27 @@ Run a fixed-batch FIFO scheduling benchmark:
 ```powershell
 python src/serving/scheduler.py --device cuda --warmup 1 --requests 8 --batch-size 4 --max-new-tokens 32
 ```
+
+## Results and Remaining Work
+
+The complete two-machine report is in
+[combined-final-report.md](results/combined-final-report.md).
+
+Completed:
+- Phase 01 baseline decoder and GPT-2 smoke/latency measurements
+- Phase 02 KV-cache on/off scaling
+- Phase 03 fixed-batch and FIFO scheduling benchmarks
+- Phase 04 vLLM serving and GuideLLM concurrency benchmarks
+- RTX 3050 Ti laptop optimization campaign
+- RTX 5060 Ti GM700 desktop benchmark bundle
+- Cross-machine, temperature, power, batching and KV-cache charts
+
+Remaining:
+- Phase 05 MLC LLM CUDA runtime, quantization and direct runtime comparison
+- Equal-prompt and equal-runtime cross-machine reruns
+- P95/P99, sustained-clock, CPU/RAM, power-efficiency and noise profiling
+- Quantized 0.5B/1B model experiments within VRAM limits
+- Blog-ready article draft and publication review
 
 See [vLLM serving results](docs/04_vllm_results.md) for the completed concurrency experiment.
 
