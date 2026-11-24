@@ -1,0 +1,22 @@
+{
+  "machine_id": "rtx3050ti-laptop",
+  "recorded_at_utc": "2026-11-24",
+  "os": "Microsoft Windows 11 Home 10.0.26300 64-bit",
+  "wsl": "WSL2 Ubuntu 24.04.5 LTS",
+  "cpu": "AMD Ryzen 9 5900HS with Radeon Graphics",
+  "cpu_cores_threads": "8C/16T",
+  "ram_gib": 15.41,
+  "gpu": "NVIDIA GeForce RTX 3050 Ti Laptop GPU",
+  "gpu_vram_mib": 4095.5,
+  "gpu_compute_capability": "8.6",
+  "nvidia_driver": "560.94",
+  "windows_python": "3.12.2",
+  "windows_pytorch": "2.14.1+cu126",
+  "windows_cuda_runtime": "12.6",
+  "windows_cudnn": 91002,
+  "vllm": "0.8.5.post1",
+  "vllm_python": "3.12.3",
+  "vllm_pytorch": "2.6.0+cu124",
+  "vllm_cuda_runtime": "12.4",
+  "guidellm": "0.8.1"
+}

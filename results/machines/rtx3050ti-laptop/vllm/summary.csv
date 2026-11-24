@@ -1,0 +1,6 @@
+machine_id,model,precision,prompt_tokens,output_tokens,concurrency,duration_seconds,successful_requests,errored_requests,ttft_median_ms,tpot_median_ms,output_tokens_per_second,requests_per_second,gpu,gpu_vram_mib,nvidia_driver,vllm,torch,cuda_runtime
+rtx3050ti-laptop,openai-community/gpt2,float16,128,32,1,120,204,0,31.790971755981445,16.110651195049286,54.4,1.7,NVIDIA GeForce RTX 3050 Ti Laptop GPU,4095.5,560.94,0.8.5.post1,2.6.0+cu124,12.4
+rtx3050ti-laptop,openai-community/gpt2,float16,128,32,2,120,310,0,52.65498161315918,25.028876960277557,82.66666666666666,2.5833333333333326,NVIDIA GeForce RTX 3050 Ti Laptop GPU,4095.5,560.94,0.8.5.post1,2.6.0+cu124,12.4
+rtx3050ti-laptop,openai-community/gpt2,float16,128,32,4,120,498,0,82.18812942504883,30.39988875389099,132.8,4.1499999999999995,NVIDIA GeForce RTX 3050 Ti Laptop GPU,4095.5,560.94,0.8.5.post1,2.6.0+cu124,12.4
+rtx3050ti-laptop,openai-community/gpt2,float16,128,32,8,120,817,0,124.58109855651855,35.8603298664093,217.8583333333333,6.8,NVIDIA GeForce RTX 3050 Ti Laptop GPU,4095.5,560.94,0.8.5.post1,2.6.0+cu124,12.4
+rtx3050ti-laptop,openai-community/gpt2,float16,128,32,16,120,1152,0,210.3567123413086,52.377477288246155,307.2,9.6,NVIDIA GeForce RTX 3050 Ti Laptop GPU,4095.5,560.94,0.8.5.post1,2.6.0+cu124,12.4
