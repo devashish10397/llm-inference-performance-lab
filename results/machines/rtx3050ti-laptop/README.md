@@ -23,8 +23,8 @@ The exact hardware and software inventory is in
 ## Contents
 
 - `baseline/`: direct PyTorch measurements and charts.
-- `kv-cache/`: cache on/off scaling measurements, summary, telemetry plot,
-  variance chart, and interpretation.
+- `kv-cache/`: cache on/off scaling measurements, summary, 123 normalized
+  GPU telemetry samples, telemetry plot, variance chart, and interpretation.
 - `batching/`: fixed-batch FIFO measurements and charts.
 - `vllm/`: compact serving metrics and charts.
 - `comparison/`: unified directional comparison and workload caveats.

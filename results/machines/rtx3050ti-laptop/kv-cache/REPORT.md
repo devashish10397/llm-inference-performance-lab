@@ -14,6 +14,9 @@
 - Power: 16.48-22.79 W
 - Graphics clock: 210-877 MHz
 - GPU utilization: 0-94%
+- Raw samples: [telemetry.csv](telemetry.csv) contains all 123 one-second
+  samples captured during the benchmark.
+- Plot: [gpu_telemetry.png](gpu_telemetry.png)
 
 ## Finding
 At 128 output tokens, the cache-on median is about 27.2% lower end-to-end and 27.1% lower TPOT than cache-off. The 32-token case remains noisy; scaling to longer outputs makes the cache benefit clear.
