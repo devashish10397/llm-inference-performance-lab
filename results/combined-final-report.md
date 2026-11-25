@@ -60,6 +60,36 @@ and desktop used different vLLM/PyTorch/CUDA stacks, and the desktop had
 more VRAM and newer GPU architecture. They are useful as observed results,
 not universal hardware scaling factors.
 
+## Matched vLLM workload
+
+The vLLM workloads are workload-matched:
+
+- Model: GPT-2
+- Precision: FP16
+- Endpoint: `/v1/completions`
+- Prompt: 128 synthetic tokens
+- Output: 32 tokens
+- Duration: 120 seconds per concurrency level
+- Concurrency: 1, 2, 4, 8 and 16
+- Error requirement: zero errored requests
+
+The runtime stacks are not fully matched:
+
+| Machine | vLLM | vLLM Torch | vLLM CUDA | NVIDIA driver |
+|---|---|---|---|---:|
+| RTX 3050 Ti Laptop | 0.8.5.post1 | 2.6.0+cu124 | 12.4 | 560.94 |
+| RTX 5060 Ti Desktop | 0.34.0 | 2.14.0+cu130 | 13.0 | 621.01 |
+
+Matched concurrency results:
+
+| Concurrency | Laptop TTFT P50 | Desktop TTFT P50 | Laptop TPS | Desktop TPS |
+|---:|---:|---:|---:|---:|
+| 1 | 43.74 ms | 11.30 ms | 48.27 | 652.18 |
+| 2 | 77.25 ms | 17.27 ms | 70.40 | 1171.56 |
+| 4 | 175.83 ms | 19.58 ms | 104.53 | 2160.11 |
+| 8 | 287.72 ms | 24.27 ms | 137.06 | 3768.27 |
+| 16 | Not captured | 39.75 ms | Not captured | 5539.43 |
+
 ## Latency comparison
 
 | Scenario | RTX 3050 Ti | RTX 5060 Ti |
