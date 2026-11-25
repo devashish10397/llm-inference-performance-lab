@@ -68,7 +68,7 @@ Measurements will include workload configuration, hardware details, and methodol
 | 02 | KV-cache behavior and memory analysis | Complete |
 | 03 | Request scheduling and batching experiments | Complete |
 | 04 | vLLM serving, concurrency, and throughput analysis | Complete |
-| 05 | MLC LLM runtime and quantization experiments | Blocked / not started |
+| 05 | MLC LLM runtime and quantization experiments | Blocked: CUDA 12.8/13.0 wheel and source attempts failed on RTX 5060 Ti/WSL2 |
 | 06 | GPU profiling and bottleneck identification | Partial |
 | 07 | Optimization experiments and performance comparisons | Complete for GPT-2 batching, KV cache, vLLM and thermal behavior |
 
@@ -188,6 +188,7 @@ Completed:
 
 Remaining:
 - Phase 05 MLC LLM CUDA runtime, quantization and direct runtime comparison
+- MLC LLM is blocked on RTX 5060 Ti/WSL2: both CUDA 12.8/13.0 wheel imports and the source build failed or segfaulted
 - Equal-prompt and equal-runtime cross-machine reruns
 - P95/P99, sustained-clock, CPU/RAM, power-efficiency and noise profiling
 - Quantized 0.5B/1B model experiments within VRAM limits

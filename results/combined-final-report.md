@@ -108,6 +108,14 @@ However, these results show that a 4 GB laptop GPU is sufficient for:
 It is not the right hardware for longer repeated 128+ concurrent workloads,
 large models, stable high-throughput serving or quantized MLC benchmarking.
 
+## MLC LLM status
+
+MLC LLM was retried with the CUDA 12.8 wheel and native library paths.
+GPU-visible Torch and MLC imports segfaulted, and CPU-only package imports
+could not load all required TVM runtime libraries. No MLC model was downloaded
+or benchmarked. This result should be documented as a compatibility limitation,
+not as a runtime performance result.
+
 ## Reproduction
 
 - [GM700 report](machines/gm700-desktop/README.md)
